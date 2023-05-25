@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string>
+
+std::string encrypt(const std::string& message, const std::string& key) {
+    std::string encryptedMessage;
+    int keyLength = key.length();
+    int keyIndex = 0;
+
+    for (std::size_t i = 0; i < message.length(); ++i) {
+        char c = message[i];
+
+        if (std::isalpha(c)) {
+            char base = std::islower(c) ? 'a' : 'A';
+            int shift = key[keyIndex % keyLength] - '0';
+            c = (c - base + shift) % 26 + base;
+            ++keyIndex;
+        }
+
+        encryptedMessage += c;
+    }
+
+    return encryptedMessage;
+}
+
+std::string decrypt(const std::string& encryptedMessage, const std::string& key) {
+    std::string decryptedMessage;
+    int keyLength = key.length();
+    int keyIndex = 0;
+
+    for (std::size_t i = 0; i < encryptedMessage.length(); ++i) {
+        char c = encryptedMessage[i];
+
+        if (std::isalpha(c)) {
+            char base = std::islower(c) ? 'a' : 'A';
+            int shift = key[keyIndex % keyLength] - '0';
+            c = (c - base - shift + 26) % 26 + base;
+            ++keyIndex;
+        }
+
+        decryptedMessage += c;
+    }
+
+    return decryptedMessage;
+}
+
+int main() {
+    std::string message;
+    std::string key;
+
+    std::cout << "Enter the message: ";
+    std::getline(std::cin, message);
+
+    std::cout << "Enter the key (a sequence of digits): ";
+    std::getline(std::cin, key);
+
+    std::string encryptedMessage = encrypt(message, key);
+    std::cout << "Encrypted message: " << encryptedMessage << std::endl;
+
+    std::string decryptedMessage = decrypt(encryptedMessage, key);
+    std::cout << "Decrypted message: " << decryptedMessage << std::endl;
+
+    return 0;
+}
